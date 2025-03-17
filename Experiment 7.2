@@ -1,0 +1,104 @@
+Code 1: Unique Path:
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector<int> dp(n, 1); 
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[j] += dp[j - 1];  
+            }
+        }
+        return dp[n - 1];
+    }
+};
+
+
+Code 2: Coin Change:
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> dp(amount + 1, INT_MAX);
+        dp[0] = 0;
+        
+        for (int coin : coins) {
+            for (int j = coin; j <= amount; j++) {
+                if (dp[j - coin] != INT_MAX) {
+                    dp[j] = min(dp[j], 1 + dp[j - coin]);
+                }
+            }
+        }
+        return (dp[amount] == INT_MAX) ? -1 : dp[amount];
+    }
+};
+
+
+Code 3: Longest Increasing Subsequence:
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> dp(n, 1);
+        int maxLength = 1;
+        
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLength = max(maxLength, dp[i]);
+        }
+        
+        return maxLength;
+    }
+};
+
+
+Code 4: Decode Ways:
+class Solution {
+public:
+    int numDecodings(string s) {
+        int n = s.size();
+        if (n == 0 || s[0] == '0') return 0;
+        
+        vector<int> dp(n + 1, 0);
+        dp[0] = 1;
+        dp[1] = (s[0] != '0') ? 1 : 0;
+        
+        for (int i = 2; i <= n; i++) {
+            if (s[i - 1] != '0') {
+                dp[i] += dp[i - 1];
+            }
+            int twoDigit = stoi(s.substr(i - 2, 2));
+            if (twoDigit >= 10 && twoDigit <= 26) {
+                dp[i] += dp[i - 2];
+            }
+        }
+        
+        return dp[n];
+    }
+};
+
+
+Code 5: Word Break:
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size();
+        unordered_set<string> dict(wordDict.begin(), wordDict.end());
+        vector<bool> dp(n + 1, false);
+        dp[0] = true;
+        
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && dict.find(s.substr(j, i - j)) != dict.end()) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        return dp[n];
+    }
+};
+
